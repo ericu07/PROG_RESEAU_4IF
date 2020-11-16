@@ -1,4 +1,4 @@
-package tp.client;
+package tp.TCP.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,10 +7,11 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class ChatClientsTCP {
+public class ChatClient {
 
     static Thread write = null;
-    static Socket echoSocket = null;
+
+    static Socket serverSocket = null;
     static PrintStream socOut = null;
     static BufferedReader stdIn = null;
     static BufferedReader socIn = null;
@@ -35,7 +36,7 @@ public class ChatClientsTCP {
             socOut.close();
             socIn.close();
             stdIn.close();
-            echoSocket.close();
+            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,7 +47,7 @@ public class ChatClientsTCP {
             try {
                 System.out.println(socIn.readLine());
             } catch (IOException e) {
-                System.out.println("catch exception");
+                System.out.println("handled exception");
                 e.printStackTrace();
                 break;
             }
@@ -61,10 +62,10 @@ public class ChatClientsTCP {
 
         try {
             // creation socket ==> connexion
-            echoSocket = new Socket(args[0],new Integer(args[1]).intValue());
+            serverSocket = new Socket(args[0], Integer.parseInt(args[1]));
             socIn = new BufferedReader(
-                    new InputStreamReader(echoSocket.getInputStream()));
-            socOut= new PrintStream(echoSocket.getOutputStream());
+                    new InputStreamReader(serverSocket.getInputStream()));
+            socOut= new PrintStream(serverSocket.getOutputStream());
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + args[0]);
@@ -75,8 +76,8 @@ public class ChatClientsTCP {
             System.exit(1);
         }
 
-        new Thread(ChatClientsTCP::readThread).start();
-        write = new Thread(ChatClientsTCP::writeThread);
+        new Thread(ChatClient::readThread).start();
+        write = new Thread(ChatClient::writeThread);
         write.start();
     }
 
