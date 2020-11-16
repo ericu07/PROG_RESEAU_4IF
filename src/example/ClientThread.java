@@ -5,7 +5,7 @@
  * Authors:
  */
 
-package stream;
+package example;
 
 import java.io.*;
 import java.net.*;
