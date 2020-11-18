@@ -71,8 +71,8 @@ public class ChatServer {
                             }
                             case "join" : {
                                 if ( (commandAttribute(line, 1) != null) &&
-                                     (rooms.get(commandAttribute(line, 1)) != null) ) {
-                                    client.changeRoom(rooms.get(commandAttribute(line, 1)));
+                                     (rooms.get(new Integer(commandAttribute(line, 1))) != null) ) {
+                                    client.changeRoom(rooms.get(new Integer(commandAttribute(line, 1))));
                                 } else {
                                     client.send("invalid room");
                                 }
@@ -83,6 +83,26 @@ public class ChatServer {
                             }
                             case "historic": {
                                 client.send(client.room.historic());
+                                break;
+                            }
+                            case "savehistoric": {
+                                boolean save = client.room.saveHistoric();
+                                if(save) {
+                                    client.send("Historic saved");
+                                }else{
+                                    client.send("Fail to save historic");
+                                }
+                                break;
+                            }
+                            case "loadhistoric": {
+                                boolean restoration = client.room.loadHistoric();
+                                if(restoration) {
+                                    client.send("Load Successfull");
+                                    client.room.broadcast(client.name + " has load the historic of room " + client.room.roomId);
+                                }else{
+                                    client.send("Load Failure");
+                                }
+                                break;
                             }
                             default: {
                                 client.send("unknown command : '" + line + "'");
@@ -90,7 +110,11 @@ public class ChatServer {
                             }
                         }
                     } else if (isMessage(line)) { // un message
-                        client.room.broadcast("> " + client.name + " : " + line);
+                        try{
+                            client.room.broadcast("> " + client.name + " : " + line);
+                        }catch(Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
