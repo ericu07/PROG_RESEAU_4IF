@@ -64,7 +64,7 @@ public class WebServer {
                 LinkedList<String> strs = new LinkedList<>();
                 String str;
                 do {
-                    System.out.print("read : ");
+                    System.out.print("head : ");
                     str = in.readLine();
                     strs.addLast(str);
                     System.out.println(str);
@@ -78,7 +78,7 @@ public class WebServer {
                     case "POST": {
                         // File
                         boolean error404 = false;
-                        String resource = split[1];
+                        String resource = split[1].split("\\?")[0];
                         File f = new File("resources/" + resource);
                         if (!f.exists()) {
                             System.out.println("404: " + f.getAbsolutePath());
@@ -96,6 +96,16 @@ public class WebServer {
                         out.println();
 
                         // Send the HTML page
+                        if (split[0].equals("POST")) {
+                            do {
+                                System.out.print("body : ");
+                                str = in.readLine();
+                                strs.addLast(str);
+                                System.out.println(str);
+                            } while (str != null && !str.equals(""));
+                        }
+
+                        // Send the HTML page
                         if (!split[0].equals("HEAD")) {
                             FileReader fr = new FileReader(f);
                             BufferedReader br = new BufferedReader(fr);
@@ -104,6 +114,7 @@ public class WebServer {
                             while((line=br.readLine())!=null) {
                                 out.println(line);
                             }
+                            out.println("");
                             out.println();
                             out.flush();
 
@@ -113,6 +124,67 @@ public class WebServer {
 
                         break;
                     }
+                    case "DELETE": {
+                        String resource = split[1].split("\\?")[0];
+                        File f = new File("resources/" + resource);
+                        if (f.exists() && f.delete()) {
+                            System.out.println("File " + f.getAbsolutePath() + " deleted");
+                            // Send the headers
+                            out.println("HTTP/1.0 202 ACCEPTED");
+                            out.println("Content-Type: text/html");
+                            out.println("Server: Bot");
+                            // this blank line signals the end of the headers
+                            out.println();
+                        } else {
+                            System.out.println("Failed to delete " + f.getAbsolutePath());
+                            // Send the headers
+                            out.println("HTTP/1.0 204 NO CONTENT");
+                            out.println("Content-Type: text/html");
+                            out.println("Server: Bot");
+                            // this blank line signals the end of the headers
+                            out.println();
+                        }
+                        break;
+                    }
+case "PUT": {
+    String resource = split[1].split("\\?")[0];
+    File f = new File("resources/" + resource);
+    StringBuilder fContent = new StringBuilder();
+    try {
+        if (f.createNewFile()) {
+            do {
+                System.out.print("body : ");
+                str = in.readLine();
+                strs.addLast(str);
+                fContent.append(str);
+                System.out.println(str);
+            } while (str != null && !str.equals(""));
+            BufferedWriter fWriter = new BufferedWriter(new FileWriter(f));
+            fWriter.append(fContent.toString());
+            fWriter.close();
+
+            System.out.println("Created file " + f.getAbsolutePath());
+            // Send the headers
+            out.println("HTTP/1.0 201 CREATED");
+            out.println("Content-Location: /" + resource);
+            out.println("Server: Bot");
+            // this blank line signals the end of the headers
+            out.println();
+        } else {
+            throw new IOException();
+        }
+    } catch (IOException e) {
+        System.out.println("Failed to create file " + f.getAbsolutePath());
+        // Send the headers
+        out.println("HTTP/1.0 204 No Content");
+        out.println("Content-Location: /" + resource);
+        out.println("Server: Bot");
+        // this blank line signals the end of the headers
+        out.println();
+
+    }
+    break;
+}
                     default: {
                         // Send the response
 
