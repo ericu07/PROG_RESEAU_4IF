@@ -97,13 +97,22 @@ public class WebServer {
 
                         // Send the HTML page
                         if (split[0].equals("POST")) {
-                            do {
+                            int bodyLenght = 0;
+                            for (String headerLine : strs) {
+                                if (headerLine.split(" ")[0].equals("Content-Length:")) {
+                                    bodyLenght = Integer.parseInt(headerLine.split(" ")[1]);
+                                }
+                            }
+                            int bodyReadedLenght = 0;
+
+                            while (bodyReadedLenght < bodyLenght) {
                                 System.out.print("body : ");
                                 str = in.readLine();
                                 strs.addLast(str);
                                 System.out.println(str);
-                            } while (str != null && !str.equals(""));
-                            System.out.println("done read post");
+                                bodyReadedLenght += 1; // sauts de ligne
+                                bodyReadedLenght += str.length();
+                            }
                         }
 
                         // Send the HTML page
@@ -153,14 +162,23 @@ public class WebServer {
                         StringBuilder fContent = new StringBuilder();
                         try {
                             if (f.createNewFile()) {
-                                do {
+                                int bodyLenght = 0;
+                                for (String headerLine : strs) {
+                                    if (headerLine.split(" ")[0].equals("Content-Length:")) {
+                                        bodyLenght = Integer.parseInt(headerLine.split(" ")[1]);
+                                    }
+                                }
+                                int bodyReadedLenght = 0;
+
+                                while (bodyReadedLenght < bodyLenght) {
                                     System.out.print("body : ");
                                     str = in.readLine();
                                     strs.addLast(str);
-                                    fContent.append(str);
+                                    fContent.append(str).append("\r\n");
                                     System.out.println(str);
-                                } while (str != null && !str.equals(""));
-                                fContent.append("\n");
+                                    bodyReadedLenght += 1; // sauts de ligne
+                                    bodyReadedLenght += str.length();
+                                }
                                 BufferedWriter fWriter = new BufferedWriter(new FileWriter(f));
                                 fWriter.append(fContent.toString());
                                 fWriter.close();
@@ -205,8 +223,9 @@ public class WebServer {
                     }
                 }
 
-                out.println("");
+                out.println();
                 remote.close();
+                System.out.println("request done");
 
             } catch (Exception e) {
                 System.out.println("Error: " + e);
