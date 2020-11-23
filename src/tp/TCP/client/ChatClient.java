@@ -67,6 +67,7 @@ public class ChatClient {
                     new InputStreamReader(serverSocket.getInputStream()));
             socOut= new PrintStream(serverSocket.getOutputStream());
             stdIn = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Connected to " + args[0]);
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + args[0]);
             System.exit(1);

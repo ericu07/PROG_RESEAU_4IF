@@ -116,20 +116,37 @@ public class WebServer {
                         }
 
                         // Send the HTML page
-                        if (!split[0].equals("HEAD")) {
-                            FileReader fr = new FileReader(f);
-                            BufferedReader br = new BufferedReader(fr);
+                        if (!split[0].equals("HEAD")) { // retourne un body
 
-                            String line;
-                            while((line=br.readLine())!=null) {
-                                out.println(line);
+                            if (resource.split("\\.")[1].equals("class")) { // classe java
+                                Process p = Runtime.getRuntime().exec("java -cp " + f.getParentFile().getAbsolutePath() + " " + f.getName().split("\\.")[0]);
+                                BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                                String line;
+                                while ((line = input.readLine()) != null) {
+                                    out.println(line);
+                                }
+                                input.close();
+
+                                out.println("");
+                                out.println();
+                                out.flush();
+
+                            } else { // texte
+                                FileReader fr = new FileReader(f);
+                                BufferedReader br = new BufferedReader(fr);
+
+                                String line;
+                                while((line=br.readLine())!=null) {
+                                    out.println(line);
+                                }
+
+                                out.println("");
+                                out.println();
+                                out.flush();
+
+                                br.close();
+                                fr.close();
                             }
-                            out.println("");
-                            out.println();
-                            out.flush();
-
-                            br.close();
-                            fr.close();
                         }
 
                         break;
