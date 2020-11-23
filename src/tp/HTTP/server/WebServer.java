@@ -103,6 +103,7 @@ public class WebServer {
                                 strs.addLast(str);
                                 System.out.println(str);
                             } while (str != null && !str.equals(""));
+                            System.out.println("done read post");
                         }
 
                         // Send the HTML page
@@ -146,45 +147,46 @@ public class WebServer {
                         }
                         break;
                     }
-case "PUT": {
-    String resource = split[1].split("\\?")[0];
-    File f = new File("resources/" + resource);
-    StringBuilder fContent = new StringBuilder();
-    try {
-        if (f.createNewFile()) {
-            do {
-                System.out.print("body : ");
-                str = in.readLine();
-                strs.addLast(str);
-                fContent.append(str);
-                System.out.println(str);
-            } while (str != null && !str.equals(""));
-            BufferedWriter fWriter = new BufferedWriter(new FileWriter(f));
-            fWriter.append(fContent.toString());
-            fWriter.close();
+                    case "PUT": {
+                        String resource = split[1].split("\\?")[0];
+                        File f = new File("resources/" + resource);
+                        StringBuilder fContent = new StringBuilder();
+                        try {
+                            if (f.createNewFile()) {
+                                do {
+                                    System.out.print("body : ");
+                                    str = in.readLine();
+                                    strs.addLast(str);
+                                    fContent.append(str);
+                                    System.out.println(str);
+                                } while (str != null && !str.equals(""));
+                                fContent.append("\n");
+                                BufferedWriter fWriter = new BufferedWriter(new FileWriter(f));
+                                fWriter.append(fContent.toString());
+                                fWriter.close();
 
-            System.out.println("Created file " + f.getAbsolutePath());
-            // Send the headers
-            out.println("HTTP/1.0 201 CREATED");
-            out.println("Content-Location: /" + resource);
-            out.println("Server: Bot");
-            // this blank line signals the end of the headers
-            out.println();
-        } else {
-            throw new IOException();
-        }
-    } catch (IOException e) {
-        System.out.println("Failed to create file " + f.getAbsolutePath());
-        // Send the headers
-        out.println("HTTP/1.0 204 No Content");
-        out.println("Content-Location: /" + resource);
-        out.println("Server: Bot");
-        // this blank line signals the end of the headers
-        out.println();
+                                System.out.println("Created file " + f.getAbsolutePath());
+                                // Send the headers
+                                out.println("HTTP/1.0 201 CREATED");
+                                out.println("Content-Location: /" + resource);
+                                out.println("Server: Bot");
+                                // this blank line signals the end of the headers
+                                out.println();
+                            } else {
+                                throw new IOException();
+                            }
+                        } catch (IOException e) {
+                            System.out.println("Failed to create file " + f.getAbsolutePath());
+                            // Send the headers
+                            out.println("HTTP/1.0 204 No Content");
+                            out.println("Content-Location: /" + resource);
+                            out.println("Server: Bot");
+                            // this blank line signals the end of the headers
+                            out.println();
 
-    }
-    break;
-}
+                        }
+                        break;
+                    }
                     default: {
                         // Send the response
 
@@ -203,8 +205,9 @@ case "PUT": {
                     }
                 }
 
+                out.println("");
+                remote.close();
 
-                //remote.close();
             } catch (Exception e) {
                 System.out.println("Error: " + e);
             }
