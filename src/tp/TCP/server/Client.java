@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
+/**
+ * Data used to represent a client
+ */
 public class Client {
 
     // IO
@@ -21,6 +24,11 @@ public class Client {
 
     // Constructeur
 
+    /**
+     * Create the client abstraction
+     * @param clientSocket socket associated to the client
+     * @throws IOException exception
+     */
     public Client(Socket clientSocket) throws IOException {
         socIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
@@ -33,14 +41,27 @@ public class Client {
 
     // Méthodes
 
+    /**
+     * send a message to the client
+     * @param message message to send
+     */
     public void send(String message) {
         socOut.println(message);
     }
 
+    /**
+     * receive a message from the client
+     * @return message received
+     * @throws IOException exception
+     */
     public String receive() throws IOException {
         return socIn.readLine();
     }
 
+    /**
+     * change the room of the client
+     * @param newRoom room to enter
+     */
     public void changeRoom(Room newRoom) {
         Room oldRoom = this.room;
 
@@ -58,6 +79,10 @@ public class Client {
         }
     }
 
+    /**
+     * rename the client
+     * @param name new name for the client
+     */
     public void rename(String name) {
         String oldName = this.name;
         this.name = name;

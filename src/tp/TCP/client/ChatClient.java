@@ -11,6 +11,9 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * Client side, TCP
+ */
 public class ChatClient {
 
     static Thread write = null;
@@ -27,6 +30,9 @@ public class ChatClient {
     static JTextField zoneText;
     static JButton sendText;
 
+    /**
+     * Handle user inputs and forward them to the server, run in a dedicated thread
+     */
     private static void readThread() {
         while (true) {
             try {
@@ -55,6 +61,9 @@ public class ChatClient {
         }
     }
 
+    /**
+     * Handle messages reception from the server and display them, run in a dedicated thread
+     */
     private static void writeThread() {
         while (true) {
             try {

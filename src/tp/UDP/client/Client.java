@@ -7,6 +7,9 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+/**
+ * Client side (no server associated, use multicast)
+ */
 public class Client {
 
     static Thread write = null;
@@ -16,7 +19,7 @@ public class Client {
     static int groupPort = 0;
     static InetAddress groupAddr = null;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
 
         if (args.length != 2) {
@@ -54,7 +57,9 @@ public class Client {
 
     }
 
-
+    /**
+     * Handle user inputs and forward them to the server, run in a dedicated thread
+     */
     private static void readThread() {
         while (true) {
             try {
@@ -83,6 +88,9 @@ public class Client {
         }
     }
 
+    /**
+     * Handle messages reception from the server and display them, run in a dedicated thread
+     */
     private static void writeThread() {
         while (true) {
             try {

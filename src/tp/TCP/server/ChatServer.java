@@ -5,8 +5,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+/**
+ * Server side, TCP
+ */
 public class ChatServer {
 
+    /**
+     * Available rooms
+     */
     static Dictionary<Integer, Room> rooms = new Hashtable<>();
 
     public static void main(String args[]) {
@@ -31,6 +37,10 @@ public class ChatServer {
         }
     }
 
+    /**
+     * Handle a client, run in a dedicated thread
+     * @param clientSocket socket linked to the client
+     */
     private static void handleClient(Socket clientSocket) {
         Client client = null;
 
@@ -142,10 +152,20 @@ public class ChatServer {
         }
     }
 
+    /**
+     * Check if a string begin with '!'
+     * @param s string to check
+     * @return s begin with '!'
+     */
     private static boolean isCommand(String s) {
         return s != null && s.length() > 0 && s.charAt(0) == '!';
     }
 
+    /**
+     * Extract command name from a command (!<name> ...)
+     * @param command command
+     * @return command name
+     */
     private static String commandName(String command) {
         try {
             return command.split(" ", 2)[0].substring(1).toLowerCase();
@@ -154,6 +174,12 @@ public class ChatServer {
         }
     }
 
+    /**
+     * Extract an attribute from a command (!<name> [...] [...] [...])
+     * @param command command
+     * @param attribute attribute number, 1 is the first attribute
+     * @return command attribute
+     */
     private static String commandAttribute(String command, int attribute) {
         try {
             return command.split(" ", 2)[attribute];
@@ -162,10 +188,20 @@ public class ChatServer {
         }
     }
 
+    /**
+     * Check if a string is a message
+     * @param s string to check
+     * @return s is a message
+     */
     private static boolean isMessage(String s) {
         return s != null && s.length() > 0;
     }
 
+    /**
+     * Create a list of the available rooms
+     * @param rooms available rooms
+     * @return a string describing available rooms
+     */
     private static String roomsList(Enumeration<Room> rooms) {
         StringBuilder sb = new StringBuilder("Rooms list :\r\n");
         while (rooms.hasMoreElements()) {
@@ -174,6 +210,11 @@ public class ChatServer {
         return(sb.toString());
     }
 
+    /**
+     * create a room
+     * @param client who created the room
+     * @param command command used to create the room
+     */
     private static void createRoom(Client client, String command) {
         Integer roomNumber;
 
