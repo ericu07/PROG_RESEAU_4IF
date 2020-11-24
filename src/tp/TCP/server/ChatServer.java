@@ -104,8 +104,23 @@ public class ChatServer {
                                 }
                                 break;
                             }
+                            case "help": {
+                                client.send("!name <a> -> rename the user\r\n" +
+                                        "!roominfo -> get room's info\r\n"+
+                                        "!rooms-> list of the rooms\r\n"+
+                                        "!createroom <1> -> create a room with a number\r\n"+
+                                        "!renameroom <1> -> rename a room with a number\r\n"+
+                                        "!join <1> -> join a room with a room number\r\n"+
+                                        "!exit -> exit the chat\r\n"+
+                                        "!historic -> show room's historic\r\n"+
+                                        "!savehistoric -> save room's historic\r\n"+
+                                        "!loadhistoric -> load a room's historic\r\n"+
+                                        "!help -> get list of commands\r\n"
+                                );
+                            }
+
                             default: {
-                                client.send("unknown command : '" + line + "'");
+                                client.send("unknown command : '" + line + "'"+"\r\nTry !help for more information");
                                 break;
                             }
                         }
