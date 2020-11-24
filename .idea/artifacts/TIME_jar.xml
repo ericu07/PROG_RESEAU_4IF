@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TIME:jar">
+    <output-path>$PROJECT_DIR$/resources</output-path>
+    <root id="archive" name="TIME.jar">
+      <element id="module-output" name="TIME" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/../TIME/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

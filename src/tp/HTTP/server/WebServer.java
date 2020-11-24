@@ -5,7 +5,6 @@ package tp.HTTP.server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
 import java.util.LinkedList;
 
 /**
@@ -70,12 +69,11 @@ public class WebServer {
                     System.out.println(str);
                 } while (str != null && !str.equals(""));
 
-                String[] split = strs.get(0).split(" ");
-                System.out.println(split[0]);
-                switch (split[0]) {
+                String[] split = strs.get(0).split(" "); // words of the first header line
+                switch (split[0]) { // request type
                     case "HEAD":
                     case "GET":
-                    case "POST": {
+                    case "POST": { // head, get, post have lot in common
                         // File
                         boolean error404 = false;
                         String resource = split[1].split("\\?")[0];
@@ -89,15 +87,15 @@ public class WebServer {
                         // Send the response
 
                         // Send the headers
-                        out.println(error404 ? "HTTP/1.0 404 NOT FOUND" : "HTTP/1.0 200 OK");
+                        out.println(error404 ? "HTTP/1.0 404 NOT FOUND" : "HTTP/1.0 200 OK"); // code d'erreur
                         out.println("Content-Type: text/html");
                         out.println("Server: Bot");
                         // this blank line signals the end of the headers
                         out.println();
 
-                        // Send the HTML page
+                        // read POST data
                         if (split[0].equals("POST")) {
-                            int bodyLenght = 0;
+                            int bodyLenght = 0; // request's body length
                             for (String headerLine : strs) {
                                 if (headerLine.split(" ")[0].equals("Content-Length:")) {
                                     bodyLenght = Integer.parseInt(headerLine.split(" ")[1]);
@@ -116,14 +114,14 @@ public class WebServer {
                         }
 
                         // Send the HTML page
-                        if (!split[0].equals("HEAD")) { // retourne un body
+                        if (!split[0].equals("HEAD")) { // not send for head
 
-                            if (resource.split("\\.")[1].equals("class")) { // classe java
-                                Process p = Runtime.getRuntime().exec("java -cp " + f.getParentFile().getAbsolutePath() + " " + f.getName().split("\\.")[0]);
+                            if (resource.split("\\.")[1].equals("class")) { // java dynamic resource
+                                Process p = Runtime.getRuntime().exec("java -cp " + f.getParentFile().getAbsolutePath() + " " + f.getName().split("\\.")[0]); // run the java file
                                 BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
                                 String line;
                                 while ((line = input.readLine()) != null) {
-                                    out.println(line);
+                                    out.println(line); // print dynamic resource output
                                 }
                                 input.close();
 

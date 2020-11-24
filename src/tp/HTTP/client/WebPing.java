@@ -3,10 +3,12 @@ package tp.HTTP.client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+/**
+ * Simple client, emit a ping to a remote server
+ */
 public class WebPing {
     public static void main(String[] args) {
 
@@ -34,7 +36,6 @@ public class WebPing {
             while (true) {
                 System.out.println(in.readLine());
             }
-            //sock.close();
         } catch (java.io.IOException e) {
             System.out.println("Can't connect to " + httpServerHost + ":" + httpServerPort);
             System.out.println(e);
